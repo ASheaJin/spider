@@ -153,6 +153,10 @@ class Futurism_Spider():
 
     #对正文进行解析，最后返回正文解析的数组字典
     def content_parse(self,content):
+
+        # 去除里面的a标签和span标签和em标签，不然有错
+        content = re.sub(r'(<\/?a.*?>)|(<\/?span.*?>)|(<\/?em.*?>)', '', content)
+
         content_html = etree.HTML(content)
         print('content_parse ======='*5)
         print(content)
