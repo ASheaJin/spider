@@ -5,7 +5,7 @@ import json
 import pymysql
 from lxml import etree
 import re
-from Futurism_Craw.config import  *
+from Futurism_Craw.config import *
 from Futurism_Craw.data_filter import Data_Filter
 from Futurism_Craw.mysql import MySQL
 
