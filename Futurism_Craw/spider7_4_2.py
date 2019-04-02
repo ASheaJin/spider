@@ -154,18 +154,18 @@ class Futurism_Spider():
     #对正文进行解析，最后返回正文解析的数组字典
     def content_parse(self,content):
 
-        # 去除里面的a标签和span标签和em标签，不然有错
+        # 去除里面的a标签和span标签和em标签
         content = re.sub(r'(<\/?a.*?>)|(<\/?span.*?>)|(<\/?em.*?>)', '', content)
 
         content_html = etree.HTML(content)
-        print('content_parse ======='*5)
+        print('content_parse =======' * 5)
         print(content)
         print('+++++++++' * 5)
         youtubu = content_html.xpath('//iframe/@src')
         print(len(youtubu))
 
         text_list = []
-        #如果里面没有youtub 的视频
+        # 如果里面没有youtub 的视频
         if len(youtubu) == 0:
             str_text = content_html.xpath('//body//text()')
             print(str_text)
@@ -184,22 +184,26 @@ class Futurism_Spider():
 
             print(text_list)
         else:
-            video_list = content_html.xpath('//iframe/@src')
-            i = 0
-            node_list = content_html.xpath('//body//*')
-            print(node_list)
+            content_iframe = re.sub(r'(<\/?iframe.*?>)', 'token_vedio_http', content)
+
+            content_html = etree.HTML(content_iframe)
+
+            iframe_xpath = content_html.xpath('//body//text()')
             temp = ''
-            for node in node_list:
-                if node.tag != 'iframe':
-                    if node.text is not None:
-                        temp = temp + node.text
-                else:
+            i = 0
+            for str in iframe_xpath:
+                if 'token_vedio_http' in str:
                     text_list.append(temp)
-                    text_list.append(video_list[i])
-                    i = i + 1
+                    text_list.append(youtubu[i])
                     temp = ''
-            temp = temp.split('READ MORE:')[0]
+                    i = i + 1
+                elif 'READ MORE' in str:
+                    break
+                else:
+                    temp = temp + str
+
             text_list.append(temp)
+
             print(text_list)
 
         content_list = []
