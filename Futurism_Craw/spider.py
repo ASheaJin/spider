@@ -142,6 +142,9 @@ class Futurism_Spider():
         # 爬取byte页的数据
         json_byte = self.get_byte_page(offset)
 
+        #获取数据库连接
+        self.mysql.get_connection()
+
         #对爬取的latest页的数据进行清洗
         latest_records = self.data_filter.get_futurism_infos(json_latest)
         #对爬取的latest页的数据进行存储
@@ -154,7 +157,8 @@ class Futurism_Spider():
         # 对爬取的byte页的数据进行存储
         self.data_converter_save(byte_records)
 
-
+        #关闭数据库连接
+        self.mysql.close_connection()
         # print(byte_records)
 
 
@@ -168,9 +172,6 @@ if __name__ == '__main__':
     for x in range(GROUP_START,GROUP_END + 1):
         fs.run(x * OFF_SET)
         # time.sleep(10)
-
-    # 关闭数据库连接
-    fs.mysql.close()
 
 
 
