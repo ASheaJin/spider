@@ -145,8 +145,10 @@ class Data_Filter():
         for build in text_list:
             if build.startswith('http'):
                 content_dic['type'] = VEDIO
+                content_dic['resUrl'] = build
             else:
                 content_dic['type'] = TEXT
+                content_dic['text'] = build
             content_dic['text'] = build
             print(content_dic)
             content_list.append(content_dic)
