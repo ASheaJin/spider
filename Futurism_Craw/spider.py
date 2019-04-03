@@ -105,7 +105,14 @@ class Futurism_Spider():
 
         for item in records:
             # 动态的content大小
-            length = len(item) - 8
+
+            #这里要改变，之前为-8
+            length = len(item) - 9
+
+            pure_text = item[8 + length].get('text')
+            #这里item要改变一下，把里面除了pure_text的变为json
+            #去除尾
+            item.pop()
             json_data = json.dumps(item)
 
             data = {
@@ -117,7 +124,8 @@ class Futurism_Spider():
                 'author': item[4].get('text'),
                 'data': json_data,
                 'release_time': item[6 + length].get('text'),
-                'craw_time': item[7 + length].get('text')
+                'craw_time': item[7 + length].get('text'),
+                'pure_text': pure_text
             }
             self.mysql.insert(TARGET_TABLE,data)
 
