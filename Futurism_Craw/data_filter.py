@@ -11,7 +11,7 @@ class Data_Filter():
 
     def get_futurism_infos(self,json):
         '''
-        对接受来的json数据，安照格式生成可插入数据库的list
+        对接受来的json数据，按照格式生成可插入数据库的list
         :param json:
         :return:
         '''
@@ -39,6 +39,11 @@ class Data_Filter():
 
                 # print(img_url)
                 content_list = self.content_parse(content)
+                # content_list = self.content_parse_only_text(content)
+
+                pure_text = self.pure_text_resolve(content_list)
+                print(pure_text)
+                #对content_list进行处理，得到纯文本
 
                 article_text = [
                     {
@@ -73,9 +78,22 @@ class Data_Filter():
                     'text': craw_time
                 })
 
+                article_text.append({
+                    'type': TEXT,
+                    'text': pure_text
+                })
                 # print(article_text)
                 print(page_num)
                 yield article_text
+
+
+    def pure_text_resolve(self,content_list):
+        temp = ''
+        for content in content_list:
+            if content['type'] == TEXT:
+                temp = temp + content['text']
+
+        return temp
 
 
     def content_parse(self, content):
@@ -105,7 +123,7 @@ class Data_Filter():
                     text_list.append(temp)
                     text_list.append(str)
                     temp = ''
-                elif 'READ MORE:' in str:
+                elif 'READ MORE:' in str or 'Futurism fans:' in str:
                     break
                 else:
                     temp = temp + str
@@ -123,7 +141,7 @@ class Data_Filter():
                     text_list.append(youtubu[i])
                     temp = ''
                     i = i + 1
-                elif 'READ MORE' in str:
+                elif 'READ MORE:' in str or 'Futurism fans:' in str:
                     break
                 else:
                     temp = temp + str
@@ -149,7 +167,7 @@ class Data_Filter():
             else:
                 content_dic['type'] = TEXT
                 content_dic['text'] = build
-            content_dic['text'] = build
+
             print(content_dic)
             content_list.append(content_dic)
             content_dic = {}
