@@ -3,7 +3,7 @@
 
 #ajax请求规律参数
 GROUP_START = 1
-GROUP_END = 2
+GROUP_END = 1
 
 OFF_SET = 1
 
@@ -30,3 +30,7 @@ VEDIO = 3
 VOICE = 4
 TITLE = 5
 LINK = 6
+
+#规定爬取时间
+H = 11
+M = 36
