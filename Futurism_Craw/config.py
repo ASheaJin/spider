@@ -32,5 +32,12 @@ TITLE = 5
 LINK = 6
 
 #规定爬取时间
-H = 11
-M = 36
+CARW_H = 19
+CARW_M = 51
+
+#规定发布文章时间
+PUBLISH_H = 19
+PUBLISH_M = 53
+
+#添加订阅号
+piperTemail = ''
