@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from lxml import etree
 import re
 import time
@@ -15,76 +16,77 @@ class Data_Filter():
         :param json:
         :return:
         '''
-        for page_num in range(PER_PAGE):
+        if json:
+            for page_num in range(PER_PAGE):
 
-            if json[page_num]:
-                item = json[page_num]
-                #文章标题
-                title = item.get('title').get('plain_text')
-                #文章正文
-                content = item.get('content').get('rendered')
-                #文章url
-                article_url = item.get('link')
-                #文章作者
-                author = item.get('author_detailed').get('display_name')
-                #文章发布时间
-                release_time = item.get('modified')
-                release_time = release_time.replace('T',' ')
-                #爬取时间
-                craw_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
-                #文章来源网站
-                source_sit_url = 'https://futurism.com'
+                if json[page_num]:
+                    item = json[page_num]
+                    #文章标题
+                    title = item.get('title').get('plain_text')
+                    #文章正文
+                    content = item.get('content').get('rendered')
+                    #文章url
+                    article_url = item.get('link')
+                    #文章作者
+                    author = item.get('author_detailed').get('display_name')
+                    #文章发布时间
+                    release_time = item.get('modified')
+                    release_time = release_time.replace('T',' ')
+                    #爬取时间
+                    craw_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+                    #文章来源网站
+                    source_sit_url = 'https://futurism.com'
 
-                img_url = item.get('featured_image').get('url')
+                    img_url = item.get('featured_image').get('url')
 
-                # print(img_url)
-                content_list = self.content_parse(content)
-                # content_list = self.content_parse_only_text(content)
+                    # print(img_url)
+                    content_list = self.content_parse(content)
+                    # content_list = self.content_parse_only_text(content)
 
-                pure_text = self.pure_text_resolve(content_list)
-                print(pure_text)
-                #对content_list进行处理，得到纯文本
+                    pure_text = self.pure_text_resolve(content_list)
+                    print(pure_text)
+                    #对content_list进行处理，得到纯文本
 
-                article_text = [
-                    {
-                        'type': LINK,
-                        'text': source_sit_url
-                    },
-                    {
-                        'type': LINK,
-                        'text': article_url
-                    },
-                    {
-                        'type': IMAGE,
-                        'imageUrl': img_url
-                    },
-                    {
-                        'type': TITLE,
-                        'text': title
-                    },
-                    {
+                    article_text = [
+                        {
+                            'type': LINK,
+                            'text': source_sit_url
+                        },
+                        {
+                            'type': LINK,
+                            'text': article_url
+                        },
+                        {
+                            'type': IMAGE,
+                            'imageUrl': img_url
+                        },
+                        {
+                            'type': TITLE,
+                            'text': title
+                        },
+                        {
+                            'type': TEXT,
+                            'text': author
+                        }]
+
+                    article_text = article_text + content_list
+
+                    article_text.append({
                         'type': TEXT,
-                        'text': author
-                    }]
+                        'text': release_time
+                    })
+                    article_text.append({
+                        'type': TEXT,
+                        'text': craw_time
+                    })
 
-                article_text = article_text + content_list
-
-                article_text.append({
-                    'type': TEXT,
-                    'text': release_time
-                })
-                article_text.append({
-                    'type': TEXT,
-                    'text': craw_time
-                })
-
-                article_text.append({
-                    'type': TEXT,
-                    'text': pure_text
-                })
-                # print(article_text)
-                print(page_num)
-                yield article_text
+                    article_text.append({
+                        'type': TEXT,
+                        'text': pure_text
+                    })
+                    # print(article_text)
+                    print(page_num)
+                    yield article_text
 
 
     def pure_text_resolve(self,content_list):
