@@ -1,3 +1,5 @@
+# -*- coding:utf-8 -*-
+
 import pymysql
 from Futurism_Craw.config import  *
 import json
@@ -25,6 +27,7 @@ class MySQL():
         if self.db:
             self.db.close()
 
+    #插入的时候要判断这个url是否在数据库中
     def insert(self, table, data):
         """
         插入数据
@@ -32,13 +35,20 @@ class MySQL():
         :param data:
         :return:
         """
+        # self.select(table,data)
+
         keys = ', '.join(data.keys())
         values = ', '.join(['%s'] * len(data))
+
         sql_query = 'insert into %s (%s) values (%s)' % (table, keys, values)
+        # print(self.select(table, 'count(url)', 'url = \"' + data.get('url') + '\"'))
         try:
-            if self.cursor.execute(sql_query, tuple(data.values())):
-                print('数据写入成功')
-                self.db.commit()
+             if self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"') == ((0,),):
+                if self.cursor.execute(sql_query, tuple(data.values())):
+                    # print(self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"'))
+                    print('数据写入成功')
+                    self.db.commit()
+
         except:
             print('Failed')
             self.db.rollback()
@@ -47,7 +57,10 @@ class MySQL():
 
     def select(self, table, columns, filter):
 
-        columns = ', '.join(columns)
+        #如果类型为list类型，就要拼接
+        if type(columns) == type([1,2]):
+            columns = ', '.join(columns)
+
         sql_query = 'select %s from %s where %s' % (columns, table, filter)
         print(sql_query)
         try:
