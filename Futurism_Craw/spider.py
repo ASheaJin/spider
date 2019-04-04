@@ -65,7 +65,10 @@ class Futurism_Spider():
                 # print(response.json()[0])
                 return response.json()
         except requests.ConnectionError:
-            return None
+            # return None
+            #这里强制必需访问成功
+            print('再次连接访问！')
+            return self.get_latest_page(page)
         finally:
             time.sleep(5)
 
@@ -85,7 +88,9 @@ class Futurism_Spider():
                 # print(response.json()[0])
                 return response.json()
         except requests.ConnectionError:
-            return None
+            # return None
+            print('再次连接访问！')
+            return self.get_byte_page(page)
         finally:
             time.sleep(5)
         # 保存获取的信息保存到mysql中
