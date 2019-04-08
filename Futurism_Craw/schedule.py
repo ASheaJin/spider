@@ -1,11 +1,14 @@
-# coding:utf8
+# -*- coding: utf-8 -*-
 import datetime
 import time
 from Futurism_Craw.spider import *
 from Futurism_Craw.config import *
 from Futurism_Craw.publish import Publish
+from Futurism_Craw.my_logger import Logger
 
 class Schedule():
+
+    logger = Logger(LOGGER_NAME).getlog()
 
     def __init__(self):
         self.spider = Futurism_Spider()
@@ -17,12 +20,15 @@ class Schedule():
         for x in range(GROUP_START, GROUP_END + 1):
             self.spider.run(x * OFF_SET)
 
-        time.sleep(10)
+        time.sleep(60)
 
-    def doPublish(self):
+    def doPublish_hours(self):
         self.publish.main_hours()
         time.sleep(10)
 
+    def doPublish_day(self):
+        self.publish.main_yesterday()
+        time.sleep(10)
 
 
     # 一般网站都是1:00点更新数据，所以每天凌晨一点启动
@@ -36,11 +42,13 @@ class Schedule():
                     break
                 #查看是否到发布时间，发布的是前一天前3条文章
                 if now.hour == publish_h and now.minute == publish_m:
-                    self.doPublish()
+                    self.doPublish_day()
+                    # pass
                 # 每隔60秒检测一次
                 time.sleep(60)
-
             self.doCraw()
+
+        self.logger.error('调度程序跳出死循环了')
 
         # 一般网站都是1:00点更新数据，所以每天凌晨一点启动
 
@@ -54,15 +62,16 @@ class Schedule():
                     break
                 # 查看是否到发布时间，发布的是前一天前3条文章
                 if now.minute == publish_m:
-                    self.doPublish()
+                    self.doPublish_hours()
                 # 每隔60秒检测一次
                 time.sleep(60)
 
             self.doCraw()
-
+        self.logger.error('调度程序跳出死循环了')
 
 
 if __name__ == '__main__':
     schedule = Schedule()
-    # schedule.main_day(CARW_H,CARW_M,PUBLISH_H,PUBLISH_M)
-    schedule.main_hours(CARW_M,PUBLISH_M)
+    #策略是每天凌晨1点爬取，每天8点30发3篇文章
+    schedule.main_day(CARW_H,CARW_M,PUBLISH_H,PUBLISH_M)
+    # schedule.main_hours(CARW_M,PUBLISH_M)
