@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 from lxml import etree
 import re
 import time
@@ -104,28 +104,25 @@ class Data_Filter():
         :param content: 正文
         :return:
         '''
+        print('正文解析content_parse')
         # 去除里面的a标签和span标签和em标签
         content = re.sub(r'(<\/?a.*?>)|(<\/?span.*?>)|(<\/?em.*?>)', '', content)
 
         content_html = etree.HTML(content)
-        # print('content_parse =======' * 5)
-        # print(content)
-        # print('+++++++++' * 5)
         youtubu = content_html.xpath('//iframe/@src')
-        # print(len(youtubu))
         #临时字符串temp
         temp = ''
         text_list = []
         # 如果里面没有youtub 的视频
         if len(youtubu) == 0:
             str_text = content_html.xpath('//body//text()')
-            print(str_text)
+            print('无YouTube视频，//body//text()方法：%s' % str_text)
             for str in str_text:
                 if str.startswith('https://') or str.startswith('http://'):
                     text_list.append(temp)
                     text_list.append(str)
                     temp = ''
-                elif 'READ MORE:' in str or 'Futurism fans:' in str:
+                elif str.startswith('READ MORE') or str.startswith('Futurism fans') or str.startswith('More on'):
                     break
                 else:
                     temp = temp + str
@@ -143,13 +140,13 @@ class Data_Filter():
                     text_list.append(youtubu[i])
                     temp = ''
                     i = i + 1
-                elif 'READ MORE:' in str or 'Futurism fans:' in str:
+                elif str.startswith('READ MORE') or str.startswith('Futurism fans') or str.startswith('More on'):
                     break
                 else:
                     temp = temp + str
 
         text_list.append(temp)
-        print(text_list)
+        print('正文解析list为:%s' % text_list)
 
         return self.build_content(text_list)
 
@@ -170,10 +167,9 @@ class Data_Filter():
                 content_dic['type'] = TEXT
                 content_dic['text'] = build
 
-            print(content_dic)
+            # print(content_dic)
             content_list.append(content_dic)
             content_dic = {}
-        print('|||||||||||||||||||||||||')
-        print(content_list)
+        print('正文解析组合后[dic]为:%s' % content_list)
 
         return content_list
