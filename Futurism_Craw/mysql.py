@@ -1,11 +1,14 @@
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 
 import pymysql
 from Futurism_Craw.config import  *
 import json
+from Futurism_Craw.my_logger import Logger
 
 #存储模块
 class MySQL():
+    logger = Logger(LOGGER_NAME).getlog()
+
     host = MYSQL_HOST
     username = MYSQL_USER
     password = MYSQL_PASSWORD
@@ -19,13 +22,32 @@ class MySQL():
         try:
             self.db = pymysql.connect(self.host, self.username, self.password, self.database, charset='utf8', port=self.port)
             self.cursor = self.db.cursor()
-        except pymysql.MySQLError as e:
-            print(e.args)
+            print('获取数据库链接成功')
+            return True
+        # except pymysql.MySQLError as e:
+        #     print(e.args)
+        except:
+            print('获取数据库链接失败')
+            self.logger.error('获取数据库链接失败')
+            return False
 
 
     def close_connection(self):
-        if self.db:
-            self.db.close()
+
+        try:
+            if self.db:
+                self.db.close()
+                return True
+        except :
+            self.logger('关闭数据库链接失败')
+            print('关闭数据库链接失败')
+            return False
+        #如果用下面的，程序就挂了
+        # except pymysql.MySQLError as e:
+        #     print(e.args)
+
+        # print(self.db)
+
 
     #插入的时候要判断这个url是否在数据库中
     def insert(self, table, data):
@@ -43,14 +65,18 @@ class MySQL():
         sql_query = 'insert into %s (%s) values (%s)' % (table, keys, values)
         # print(self.select(table, 'count(url)', 'url = \"' + data.get('url') + '\"'))
         try:
-             if self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"') == ((0,),):
+             #判断要插入的数据是否在数据库中存在，按照url查询
+            if self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"') == ((0,),):
                 if self.cursor.execute(sql_query, tuple(data.values())):
                     # print(self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"'))
-                    print('数据写入成功')
+                    print('数据插入成功')
                     self.db.commit()
+            else:
+                print('数据库中该数据已经存在，插入失败')
 
         except:
-            print('Failed')
+            print('插入方法出现异常，数据插入失败')
+            self.logger('插入方法出现异常，数据插入失败')
             self.db.rollback()
 
 
@@ -62,14 +88,16 @@ class MySQL():
             columns = ', '.join(columns)
 
         sql_query = 'select %s from %s where %s' % (columns, table, filter)
-        print(sql_query)
+        print('查询语句为: %s' % sql_query)
         try:
             self.cursor.execute(sql_query)
             print('查询出的数量：',self.cursor.rowcount)
             results = self.cursor.fetchall()
+            print(results)
             return results
         except:
-            print('查询失败')
+            print('查询方法出现异常')
+            self.logger('查询方法出现异常')
 
 
     def update(self,table,setter,filter):
@@ -81,11 +109,13 @@ class MySQL():
             self.db.commit()
         except:
             print('failed')
+            self.logger('更新方法出现异常')
             self.db.rollback()
 
 
 if __name__ == '__main__':
     mysql = MySQL()
     mysql.get_connection()
-    mysql.update(TARGET_TABLE,'published = 1','url = ' + '\"https://futurism.com/russia-new-shotgun-wielding-drone-action/\"')
-    mysql.close_connection()
+    # mysql.update(TARGET_TABLE,'published = 1','url = ' + '\"https://futurism.com/russia-new-shotgun-wielding-drone-action/\"')
+    if mysql.close_connection():
+        print('haha')
