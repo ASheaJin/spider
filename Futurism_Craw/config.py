@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-
+# -*- coding: utf-8 -*-
 
 
 #存放常用静态变量和数据库链接
@@ -48,12 +48,22 @@ TITLE = 5
 LINK = 6
 
 #规定爬取时间
-CARW_H = 19
-CARW_M = 15
+CARW_H = 1
+CARW_M = 10
 
 #规定发布文章时间
-PUBLISH_H = 19
-PUBLISH_M = 20
+PUBLISH_H = 8
+PUBLISH_M = 30
 
 #添加订阅号
-piperTemail = ''
+PUBLIST_URL = 'https://application.t.email/piper/spider/send'
+PUBLIST_TOKEN = 'd9544a52744da2c0'
+PUBLISH_MAIL = 'p.20000026@msgseal.com'
+
+
+
+
+#添加filter
+PUBLISH_FILTER_BY_HOURS = 'release_time BETWEEN ( NOW( ) - INTERVAL 1 DAY - INTERVAL 24 HOUR ) AND ( NOW( ) - INTERVAL 1 DAY ) and published = 0'
+
+LOGGER_NAME = 'Shea'
