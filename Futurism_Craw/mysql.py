@@ -1,5 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+' a mysql module '
+
+__author__ = 'Shea Jin'
+import sys
+sys.path.append('../')  # 新加入的
 import pymysql
 from Futurism_Craw.config import  *
 import json
@@ -85,6 +91,7 @@ class MySQL():
 
         #如果类型为list类型，就要拼接
         if type(columns) == type([1,2]):
+        # if isinstance(columns,list):
             columns = ', '.join(columns)
 
         sql_query = 'select %s from %s where %s' % (columns, table, filter)

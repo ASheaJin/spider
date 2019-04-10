@@ -1,4 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+' a schedule module '
+
+__author__ = 'Shea Jin'
+import sys
+sys.path.append('../')  # 新加入的
 import datetime
 import time
 from Futurism_Craw.spider import *
@@ -72,6 +79,6 @@ class Schedule():
 
 if __name__ == '__main__':
     schedule = Schedule()
-    #策略是每天凌晨1点爬取，每天8点30发3篇文章
+    #策略是每天凌晨1点爬取，每天8点30发2篇文章
     schedule.main_day(CARW_H,CARW_M,PUBLISH_H,PUBLISH_M)
     # schedule.main_hours(CARW_M,PUBLISH_M)

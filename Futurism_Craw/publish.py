@@ -1,5 +1,12 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+' a publish module '
+
+__author__ = 'Shea Jin'
 #从数据库获取文章，发布文章，然后设置发布字段为1
+import sys
+sys.path.append('../')  # 新加入的
 import pymysql
 from Futurism_Craw.config import *
 from Futurism_Craw.mysql import MySQL
@@ -17,7 +24,7 @@ from Futurism_Craw.my_logger import Logger
 # WHERE
 # 	TO_DAYS(release_time) = TO_DAYS(NOW()) - 1
 
-class Publish:
+class Publish():
     logger = Logger(LOGGER_NAME).getlog()
 
     mysql = MySQL()
@@ -57,7 +64,7 @@ class Publish:
     def get_text_yesterday(self):
         columns = ['url','release_time','pure_text']
         #选取发布时间为昨天的文章,前3篇文章
-        filter = 'TO_DAYS(release_time) = TO_DAYS(NOW()) - 3 and published = 0 limit 2'
+        filter = 'TO_DAYS(release_time) = TO_DAYS(NOW()) - 2 and published = 0 limit 2'
         results = self.mysql.select(TARGET_TABLE,columns,filter)
         print(results)
         return results

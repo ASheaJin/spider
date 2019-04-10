@@ -1,6 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a logger module '
+
+__author__ = 'Shea Jin'
+
 import logging
 import logging.handlers
 import os
+import sys
+sys.path.append('../')  # 新加入的
 
 
 #用字典保存日志级别
@@ -20,7 +29,7 @@ class Logger():
         '''
         # 创建一个logger
         self.logger = logging.getLogger(logger)
-        self.logger.setLevel(logging.ERROR)
+        self.logger.setLevel(logging.INFO)
 
         # 创建一个handler，用于写入日志文件
         # fh = logging.FileHandler(logname)

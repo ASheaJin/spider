@@ -1,4 +1,13 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+' a spider module '
+
+__author__ = 'Shea Jin'
+
+import sys
+sys.path.append('../')  # 新加入的
+
 from  urllib.parse import urlencode
 import requests
 import time
@@ -9,6 +18,7 @@ from Futurism_Craw.config import *
 from Futurism_Craw.data_filter import Data_Filter
 from Futurism_Craw.mysql import MySQL
 from Futurism_Craw.my_logger import Logger
+
 
 
 
@@ -202,17 +212,15 @@ class Futurism_Spider():
 
 #多线程下载
 if __name__ == '__main__':
+
     # main(1)
     fs = Futurism_Spider()
     for x in range(GROUP_START,GROUP_END + 1):
         fs.run(x * OFF_SET)
         # time.sleep(10)
 
-
-
     # pool = Pool()
     # groups = ([x * OFF_SET for x in range(GROUP_START,GROUP_END + 1)])
     # pool.map(fs.run,groups)
     # pool.close()
     # pool.join()
-

@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+' a config module '
+
+__author__ = 'Shea Jin'
 
 #存放常用静态变量和数据库链接
 

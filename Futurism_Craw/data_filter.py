@@ -1,4 +1,11 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
+' a datafilter module '
+
+__author__ = 'Shea Jin'
+import sys
+sys.path.append('../')  # 新加入的
 from lxml import etree
 import re
 import time
