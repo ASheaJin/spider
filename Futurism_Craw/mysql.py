@@ -8,21 +8,20 @@ import sys
 sys.path.append('../')  # 新加入的
 import pymysql
 from Futurism_Craw.config import  *
-import json
-from Futurism_Craw.my_logger import Logger
+from Log_Module.my_logger import Logger
 
 #存储模块
 class MySQL():
-    logger = Logger(LOGGER_NAME).getlog()
 
-    host = MYSQL_HOST
-    username = MYSQL_USER
-    password = MYSQL_PASSWORD
-    port = MYSQL_PORT
-    database = MYSQL_DATABASE
 
     def __init__(self):
-        pass
+        self.logger = Logger(LOGGER_NAME).getlog()
+
+        self.host = MYSQL_HOST
+        self.username = MYSQL_USER
+        self.password = MYSQL_PASSWORD
+        self.port = MYSQL_PORT
+        self.database = MYSQL_DATABASE
 
     def get_connection(self):
         try:
@@ -45,7 +44,7 @@ class MySQL():
                 self.db.close()
                 return True
         except :
-            self.logger('关闭数据库链接失败')
+            self.logger.error('关闭数据库链接失败')
             print('关闭数据库链接失败')
             return False
         #如果用下面的，程序就挂了
@@ -82,7 +81,7 @@ class MySQL():
 
         except:
             print('插入方法出现异常，数据插入失败')
-            self.logger('插入方法出现异常，数据插入失败')
+            self.logger.error('插入方法出现异常，数据插入失败')
             self.db.rollback()
 
 
@@ -104,7 +103,7 @@ class MySQL():
             return results
         except:
             print('查询方法出现异常')
-            self.logger('查询方法出现异常')
+            self.logger.error('查询方法出现异常')
 
 
     def update(self,table,setter,filter):
@@ -116,7 +115,7 @@ class MySQL():
             self.db.commit()
         except:
             print('failed')
-            self.logger('更新方法出现异常')
+            self.logger.error('更新方法出现异常')
             self.db.rollback()
 
 

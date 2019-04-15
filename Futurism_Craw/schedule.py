@@ -11,11 +11,11 @@ import time
 from Futurism_Craw.spider import *
 from Futurism_Craw.config import *
 from Futurism_Craw.publish import Publish
-from Futurism_Craw.my_logger import Logger
+from Log_Module.my_logger import Logger
 
 class Schedule():
 
-    logger = Logger(LOGGER_NAME).getlog()
+
 
     def __init__(self):
         self.spider = Futurism_Spider()
@@ -47,7 +47,7 @@ class Schedule():
                 #查看是否到爬取时间
                 if now.hour == craw_h and now.minute == craw_m:
                     break
-                #查看是否到发布时间，发布的是前一天前3条文章
+                #查看是否到发布时间，发布的是前一天前2条文章
                 if now.hour == publish_h and now.minute == publish_m:
                     self.doPublish_day()
                     # pass
@@ -55,7 +55,6 @@ class Schedule():
                 time.sleep(60)
             self.doCraw()
 
-        self.logger.error('调度程序跳出死循环了')
 
         # 一般网站都是1:00点更新数据，所以每天凌晨一点启动
 
@@ -74,7 +73,6 @@ class Schedule():
                 time.sleep(60)
 
             self.doCraw()
-        self.logger.error('调度程序跳出死循环了')
 
 
 if __name__ == '__main__':

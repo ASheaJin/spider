@@ -7,13 +7,11 @@ __author__ = 'Shea Jin'
 #从数据库获取文章，发布文章，然后设置发布字段为1
 import sys
 sys.path.append('../')  # 新加入的
-import pymysql
 from Futurism_Craw.config import *
 from Futurism_Craw.mysql import MySQL
 import requests
 import time
-import json
-from Futurism_Craw.my_logger import Logger
+from Log_Module.my_logger import Logger
 
 # SELECT
 # 	url,
@@ -25,21 +23,24 @@ from Futurism_Craw.my_logger import Logger
 # 	TO_DAYS(release_time) = TO_DAYS(NOW()) - 1
 
 class Publish():
-    logger = Logger(LOGGER_NAME).getlog()
 
-    mysql = MySQL()
-    url = PUBLIST_URL
-    url_test = 'http://httpbin.org/post'
 
-    headers = {
-        'Content-Type': 'application/json'
-    }
+    def __init__(self):
+        self.logger = Logger(LOGGER_NAME).getlog()
 
-    data = {
-        'content': '无内容',
-        'piperTemail': PUBLISH_MAIL,
-        'token': PUBLIST_TOKEN
-    }
+        self.mysql = MySQL()
+        self.url = PUBLIST_URL
+        self.url_test = 'http://httpbin.org/post'
+
+        self.headers = {
+            'Content-Type': 'application/json'
+        }
+
+        self.data = {
+            'content': '无内容',
+            'piperTemail': PUBLISH_MAIL,
+            'token': PUBLIST_TOKEN
+        }
 
     def publish(self,results):
         for article in results:

@@ -34,30 +34,47 @@ class Logger():
         # 创建一个handler，用于写入日志文件
         # fh = logging.FileHandler(logname)
         # fh.setLevel(logging.DEBUG)
+
+        #把日志写入这个文件，如果文件夹不存在就创建
         if not os.path.exists('../log'):
             os.mkdir('../log')
 
-        time_handler = logging.handlers.TimedRotatingFileHandler('../log/error.log', when='D', interval=1, backupCount=7)
+        #存储最近7天的错误跟踪日志,超过7天就删除
+        time_handler = logging.handlers.TimedRotatingFileHandler('../log/error_log', when='D', interval=1, backupCount=7)
         time_handler.suffix = '%Y-%m-%d.log'
+        #只要是日志级别大于WARNING，就会写入文件
         time_handler.setLevel(logging.WARNING)
 
         # 再创建一个handler，用于输出到控制台
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
+        console_hanlder = logging.StreamHandler()
+        console_hanlder.setLevel(logging.INFO)
 
         # 定义handler的输出格式
         # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         formatter = format_dict[5]
         time_handler.setFormatter(formatter)
-        ch.setFormatter(formatter)
+        console_hanlder.setFormatter(formatter)
 
         # 给logger添加handler
         self.logger.addHandler(time_handler)
-        self.logger.addHandler(ch)
+        self.logger.addHandler(console_hanlder)
 
     def getlog(self):
         return self.logger
 
+    # @classmethod
+    # def test(self):
+    #     print('hah')
+
 if __name__ == '__main__':
     logger = Logger(logger="Shea").getlog()
-    logger.error('wrong')
+    try:
+        print('try')
+        i = 10/0
+    except BaseException as e:
+        print('yic')
+        logger.error('错误')
+
+    print('token')
+
+    # Logger.test()
