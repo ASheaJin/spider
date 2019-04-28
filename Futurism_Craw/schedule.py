@@ -48,7 +48,7 @@ class Schedule():
                 if now.hour == craw_h and now.minute == craw_m:
                     break
                 #查看是否到发布时间，发布的是前一天前2条文章
-                if now.hour == publish_h and now.minute == publish_m:
+                if now.hour == publish_h or now.hour == publish_h + 4 or now.hour == publish_h + 10:
                     self.doPublish_day()
                     # pass
                 # 每隔60秒检测一次
