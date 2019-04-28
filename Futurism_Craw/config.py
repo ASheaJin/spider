@@ -73,3 +73,6 @@ PUBLISH_FILTER_BY_HOURS = 'release_time BETWEEN ( NOW( ) - INTERVAL 1 DAY - INTE
 LOGGER_NAME = 'Shea'
 
 ARTICLT_LINK = 'https://application.t.email/pages/article/'
+
+#我的App Key:828375184
+SOURCE = '828375184'

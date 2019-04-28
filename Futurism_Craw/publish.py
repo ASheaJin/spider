@@ -12,6 +12,7 @@ from Futurism_Craw.mysql import MySQL
 import requests
 import time
 from Log_Module.my_logger import Logger
+from Futurism_Craw import short_url as su
 
 # SELECT
 # 	url,
@@ -42,12 +43,15 @@ class Publish():
             'token': PUBLIST_TOKEN
         }
 
+
     def publish(self,results):
         for article in results:
             # pure_text = article[2]
             id = article[0] * 12
             link = ARTICLT_LINK + str(id)
             print('标题为: %s 链接为: %s' % (article[1],link))
+
+            link = su.Convert_SINA_Short_Url(SOURCE,link)
             self.data['content'] = '%s \n %s' % (article[1],link)
             try:
                 #这里必需用json发送或者参考https://www.cnblogs.com/insane-Mr-Li/p/9145152.html
