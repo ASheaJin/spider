@@ -71,3 +71,5 @@ PUBLISH_MAIL = 'p.20000026@msgseal.com'
 PUBLISH_FILTER_BY_HOURS = 'release_time BETWEEN ( NOW( ) - INTERVAL 1 DAY - INTERVAL 24 HOUR ) AND ( NOW( ) - INTERVAL 1 DAY ) and published = 0'
 
 LOGGER_NAME = 'Shea'
+
+ARTICLT_LINK = 'https://application.t.email/pages/article/'
