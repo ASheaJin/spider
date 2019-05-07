@@ -43,8 +43,11 @@ class Data_Filter():
                     craw_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
                     #文章来源网站
                     source_sit_url = 'https://futurism.com'
-
-                    img_url = item.get('featured_image').get('url')
+                    print('asdfasdfasdf'*10)
+                    print(item.get('featured_image'))
+                    img_url = ''
+                    if item.get('featured_image') is not None:
+                        img_url = item.get('featured_image').get('url')
 
                     # print(img_url)
                     content_list = self.content_parse(content)
