@@ -183,23 +183,29 @@ class Futurism_Spider():
 
         #只要二者有一个不为None，就开启数据库连接
         if json_byte or json_latest:
-            #优化：获取数据库连接
-            if self.mysql.get_connection():
-                #如果请求到数据
-                if json_latest:
-                    #对爬取到的latest页的数据进行清洗
-                    latest_records = self.data_filter.get_futurism_infos(json_latest)
-                    #对爬取到的latest页的数据进行存储
-                    self.data_converter_save(latest_records)
+            try:
+                #优化：获取数据库连接
+                if self.mysql.get_connection():
+                    #如果请求到数据
+                    if json_latest:
+                        #对爬取到的latest页的数据进行清洗
+                        latest_records = self.data_filter.get_futurism_infos(json_latest)
 
-                if json_byte:
-                    # 对爬取到的byte页的数据进行清洗
-                    byte_records = self.data_filter.get_futurism_infos(json_byte)
-                    # 对爬取到的byte页的数据进行存储
-                    self.data_converter_save(byte_records)
+                        #对爬取到的latest页的数据进行存储
+                        self.data_converter_save(latest_records)
 
+                    if json_byte:
+                        # 对爬取到的byte页的数据进行清洗
+                        byte_records = self.data_filter.get_futurism_infos(json_byte)
+
+                        # 对爬取到的byte页的数据进行存储
+                        self.data_converter_save(byte_records)
+
+            finally:
                 #关闭数据库连接
                 self.mysql.close_connection()
+
+
         else:
             print('这次爬取失败~~~~~~~~~~~~~~~~，未向数据库插入数据')
             self.logger.warning('当前时间的爬虫未能爬取到数据')
