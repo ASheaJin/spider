@@ -42,6 +42,7 @@ class MySQL():
         try:
             if self.db:
                 self.db.close()
+                print('关闭数据库链接成功')
                 return True
         except :
             self.logger.error('关闭数据库链接失败')
@@ -99,7 +100,7 @@ class MySQL():
             self.cursor.execute(sql_query)
             print('查询出的数量：',self.cursor.rowcount)
             results = self.cursor.fetchall()
-            print(results)
+            # print(results)
             return results
         except:
             print('查询方法出现异常')

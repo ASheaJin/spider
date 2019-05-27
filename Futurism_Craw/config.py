@@ -66,7 +66,6 @@ PUBLISH_MAIL = 'p.20000026@msgseal.com'
 
 
 
-
 #添加filter
 PUBLISH_FILTER_BY_HOURS = 'release_time BETWEEN ( NOW( ) - INTERVAL 1 DAY - INTERVAL 24 HOUR ) AND ( NOW( ) - INTERVAL 1 DAY ) and published = 0'
 
@@ -76,3 +75,22 @@ ARTICLT_LINK = 'https://application.t.email/pages/article/'
 
 #我的App Key:828375184
 SOURCE = '828375184'
+
+
+# 得到app参数
+DEDAO_ARTICLT_LINK = 'https://application.t.email/pages/dedao_article/'
+
+
+# 得到app订阅号信息
+# DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/send'
+# DEDAO_PUBLIST_TOKEN = '223cceafd35557ba'
+# DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
+
+
+DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
+DEDAO_PUBLIST_TOKEN = 'd9544a52744da2c0'
+DEDAO_PUBLISH_MAIL = 'p.10000001@t.email'
+
+
+DEDAO_PUBLISH_HOUR = 8
+DEDAO_PUBLIST_MIN = 0
