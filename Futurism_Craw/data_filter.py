@@ -24,7 +24,7 @@ class Data_Filter():
         :return:
         '''
         if json:
-            for page_num in range(PER_PAGE):
+            for page_num in range(len(json)):
 
                 if json[page_num]:
                     item = json[page_num]
@@ -43,8 +43,6 @@ class Data_Filter():
                     craw_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
                     #文章来源网站
                     source_sit_url = 'https://futurism.com'
-                    print('asdfasdfasdf'*10)
-                    print(item.get('featured_image'))
                     img_url = ''
                     if item.get('featured_image') is not None:
                         img_url = item.get('featured_image').get('url')
@@ -54,7 +52,6 @@ class Data_Filter():
                     # content_list = self.content_parse_only_text(content)
 
                     pure_text = self.pure_text_resolve(content_list)
-                    print(pure_text)
                     #对content_list进行处理，得到纯文本
 
                     article_text = [
@@ -94,8 +91,6 @@ class Data_Filter():
                         'type': TEXT,
                         'text': pure_text
                     })
-                    # print(article_text)
-                    print(page_num)
                     yield article_text
 
 
@@ -114,7 +109,6 @@ class Data_Filter():
         :param content: 正文
         :return:
         '''
-        print('正文解析content_parse')
         # 去除里面的a标签和span标签和em标签
         content = re.sub(r'(<\/?a.*?>)|(<\/?span.*?>)|(<\/?em.*?>)', '', content)
 
@@ -156,8 +150,6 @@ class Data_Filter():
                     temp = temp + str
 
         text_list.append(temp)
-        print('正文解析list为:%s' % text_list)
-
         return self.build_content(text_list)
 
 
@@ -177,9 +169,7 @@ class Data_Filter():
                 content_dic['type'] = TEXT
                 content_dic['text'] = build
 
-            # print(content_dic)
             content_list.append(content_dic)
             content_dic = {}
-        print('正文解析组合后[dic]为:%s' % content_list)
 
         return content_list

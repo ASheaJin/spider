@@ -21,62 +21,30 @@ class Schedule():
         self.spider = Futurism_Spider()
         self.publish = Publish()
 
-
     def doCraw(self):
         # 把爬虫程序放在这个类里
         for x in range(GROUP_START, GROUP_END + 1):
-            self.spider.run(x * OFF_SET)
-
-        time.sleep(60)
-
-    def doPublish_hours(self):
-        self.publish.main_hours()
-        time.sleep(10)
+            self.spider.run(x)
 
     def doPublish_day(self):
         self.publish.main_yesterday()
-        time.sleep(10)
-
 
     # 一般网站都是1:00点更新数据，所以每天凌晨一点启动
     def main_day(self,craw_h, craw_m,publish_h,publish_m):
+
         while True:
-            while True:
-                now = datetime.datetime.now()
-                # print(now.hour, now.minute)
-                #查看是否到爬取时间
-                if now.hour == craw_h and now.minute == craw_m:
-                    break
-                #查看是否到发布时间，发布的是前一天前2条文章
-                if (now.hour == publish_h or now.hour == publish_h + 11) and now.minute == publish_m - 30:
-                    self.doPublish_day()
-                    # pass
-                # 每隔60秒检测一次
-                time.sleep(60)
-            self.doCraw()
-
-
-        # 一般网站都是1:00点更新数据，所以每天凌晨一点启动
-
-    def main_hours(self, craw_m, publish_m):
-        while True:
-            while True:
-                now = datetime.datetime.now()
-                # print(now.hour, now.minute)
-                # 查看是否到爬取时间
-                if  now.minute == craw_m:
-                    break
-                # 查看是否到发布时间，发布的是前一天前3条文章
-                if now.minute == publish_m:
-                    self.doPublish_hours()
-                # 每隔60秒检测一次
-                time.sleep(60)
-
-            self.doCraw()
+            now = datetime.datetime.now()
+            #查看是否到爬取时间，爬取时间为1:10
+            if now.hour == craw_h and now.minute == craw_m:
+                self.doCraw()
+            #发布时间是每天8:00,19:00，发布最近一周的未被发布过的两篇文章
+            if (now.hour == publish_h or now.hour == publish_h + 11) and now.minute == publish_m - 30:
+                self.doPublish_day()
+            # 每隔60秒检测一次
+            time.sleep(60)
 
 
 if __name__ == '__main__':
     schedule = Schedule()
-    #策略是每天凌晨1点爬取，每天8点30发2篇文章
+    # 进行未来主义的一天的发布和爬取策略
     schedule.main_day(CARW_H,CARW_M,PUBLISH_H,PUBLISH_M)
-    # schedule.main_hours(CARW_M,PUBLISH_M)

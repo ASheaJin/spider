@@ -11,7 +11,7 @@ __author__ = 'Shea Jin'
 GROUP_START = 1
 GROUP_END = 1
 
-OFF_SET = 1
+# OFF_SET = 1
 
 PER_PAGE = 12
 
@@ -82,15 +82,9 @@ DEDAO_ARTICLT_LINK = 'https://application.t.email/pages/dedao_article/'
 
 
 # 得到app订阅号信息
-# DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/send'
-# DEDAO_PUBLIST_TOKEN = '223cceafd35557ba'
-# DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
-
-
-DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
-DEDAO_PUBLIST_TOKEN = 'd9544a52744da2c0'
-DEDAO_PUBLISH_MAIL = 'p.10000001@t.email'
-
+DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/send'
+DEDAO_PUBLIST_TOKEN = '223cceafd35557ba'
+DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
 
 DEDAO_PUBLISH_HOUR = 8
 DEDAO_PUBLIST_MIN = 0

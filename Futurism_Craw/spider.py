@@ -62,7 +62,7 @@ class Futurism_Spider():
     def get_latest_page(self,page,current_count = 1,req_count = 3):
 
         '''
-        请求url，获取latest页json数据，然后睡眠5秒
+        请求url，获取latest页json数据
         :param page: 第几页
         :return: json数据，为12条
         '''
@@ -75,33 +75,36 @@ class Futurism_Spider():
             }
             #必须要这样写
             url = self.latest_url + urlencode(params) + '&filter%5Btag__not_in%5D%5B%5D=91937'
-            print('请求的url为:%s,这是请求的第%d次' % (url,current_count))
+            self.logger.debug('请求的url为:%s,这是请求的第%d次' % (url,current_count))
 
             try:
                 #如果60秒没有响应，就抛出异常
                 response = requests.get(url, headers=self.headers_text,timeout = 60)
                 #如果请求成功
                 if response.status_code == 200:
-                    print('latest请求成功')
+                    self.logger.debug('latest请求成功')
                     return response.json()
                 else:
-                    print('latest请求失败')
                     self.logger.error('Futurism_Craw ->spider.py-> get_latest_page()方法的latest请求失败，response.status_code != 200 url: %s' % url)
                     return None
 
             except requests.ConnectionError:
-                print('再次连接访问！')
                 self.logger.error('Futurism_Craw ->spider.py-> get_latest_page()方法的latest请求发送异常，可能是超时，再次连接访问！url: %s' % url)
                 return self.get_latest_page(page,current_count + 1,req_count)
         else:
-            print('latest请求超过限定次数')
             self.logger.error('Futurism_Craw ->spider.py-> get_latest_page()方法的latest请求失败，请求次数超过设定值:%d' % (req_count))
             return None
 
 
 
-#
     def get_byte_page(self,page,current_count = 1,req_count = 3):
+        '''
+
+        :param page: 请求第几页
+        :param current_count: 当前请求次数
+        :param req_count: 最大请求次数
+        :return:
+        '''
         if current_count <= req_count:
             params = {
                 'page': page,
@@ -109,22 +112,19 @@ class Futurism_Spider():
                 'tags[]': 91937
             }
             url = self.byte_url + urlencode(params)
-            print('请求的url为:%s,这是请求的第%d次' % (url,current_count))
+            self.logger.debug('请求的url为:%s,这是请求的第%d次' % (url,current_count))
 
             try:
                 response = requests.get(url, headers=self.headers_byte)
                 if response.status_code == 200:
                     return response.json()
                 else:
-                    print('byte请求失败')
                     self.logger.error('Futurism_Craw ->spider.py-> get_byte_page()方法的byte请求失败，response.status_code != 200 url: %s' % url)
                     return None
             except requests.ConnectionError:
-                print('再次连接访问！')
                 self.logger.error('byte中requests.get()方法发生异常，再次连接访问！url: %s' % url)
                 return self.get_byte_page(page,current_count + 1,req_count)
         else:
-            print('byte请求超过限定次数')
             self.logger.error('byte请求失败，请求次数超过设定值:%d' % (req_count))
             return None
 
@@ -135,24 +135,10 @@ class Futurism_Spider():
         :param records: 为生成器，存放的是每条新闻结构化后的集合
         :return:
         '''
-        # db = pymysql.connect(host='localhost', user='root', password='root', port=3306, db='sprider')
-        # cursor = db.cursor()
-        # cursor.execute('select version()')
-        # data2 = cursor.fetchone()
-        # print('database version:', data2)
 
         for item in records:
-            # 动态的content大小
 
-            #这里要改变，之前为-8，这里多了个pure_text
-            length = len(item) - 9
-
-            pure_text = item[8 + length].get('text')
-            #这里item要改变一下，把里面除了pure_text的变为json
-            #去除尾
-            item.pop()
             json_data = json.dumps(item)
-
             data = {
                 'url': item[1].get('text'),
                 'src_url': item[0].get('text'),
@@ -161,9 +147,9 @@ class Futurism_Spider():
                 # 'content': item[4].get('text'),
                 'author': item[4].get('text'),
                 'data': json_data,
-                'release_time': item[6 + length].get('text'),
-                'craw_time': item[7 + length].get('text'),
-                'pure_text': pure_text
+                'release_time': item[len(item) - 3].get('text'),
+                'craw_time': item[len(item) - 2].get('text'),
+                'pure_text': item[len(item) - 1].get('text')
             }
             self.mysql.insert(TARGET_TABLE,data)
 
@@ -174,40 +160,32 @@ class Futurism_Spider():
 
         #请求的时间间隔为5秒
         time.sleep(random.randint(5,10))
-        # print(len(json_latest))
 
         # 爬取byte页的数据
         json_byte = self.get_byte_page(offset,1,3)
 
-        time.sleep(random.randint(5,10))
+        json_all = []
+
+        if json_latest:
+            json_all += json_latest
+        if json_byte:
+            json_all += json_byte
 
         #只要二者有一个不为None，就开启数据库连接
-        if json_byte or json_latest:
+        if len(json_all):
             try:
                 #优化：获取数据库连接
                 if self.mysql.get_connection():
-                    #如果请求到数据
-                    if json_latest:
-                        #对爬取到的latest页的数据进行清洗
-                        latest_records = self.data_filter.get_futurism_infos(json_latest)
 
-                        #对爬取到的latest页的数据进行存储
-                        self.data_converter_save(latest_records)
+                    #对爬取到的数据进行清洗
+                    all_records = self.data_filter.get_futurism_infos(json_all)
 
-                    if json_byte:
-                        # 对爬取到的byte页的数据进行清洗
-                        byte_records = self.data_filter.get_futurism_infos(json_byte)
-
-                        # 对爬取到的byte页的数据进行存储
-                        self.data_converter_save(byte_records)
-
+                    #对爬取到的数据进行存储
+                    self.data_converter_save(all_records)
             finally:
                 #关闭数据库连接
                 self.mysql.close_connection()
-
-
         else:
-            print('这次爬取失败~~~~~~~~~~~~~~~~，未向数据库插入数据')
             self.logger.warning('当前时间的爬虫未能爬取到数据')
 
 
@@ -220,11 +198,4 @@ if __name__ == '__main__':
     # main(1)
     fs = Futurism_Spider()
     for x in range(GROUP_START,GROUP_END + 1):
-        fs.run(x * OFF_SET)
-        # time.sleep(10)
-
-    # pool = Pool()
-    # groups = ([x * OFF_SET for x in range(GROUP_START,GROUP_END + 1)])
-    # pool.map(fs.run,groups)
-    # pool.close()
-    # pool.join()
+        fs.run(x)

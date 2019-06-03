@@ -30,7 +30,7 @@ class Schedule():
                 pickle.dump(temp, f)
 
         for index, item in enumerate(temp):
-            print(item.get('next_article_id'))
+            # print(item.get('next_article_id'))
             self.publish.schedule_dedao(item.get('next_article_id'), index)
 
         time.sleep(10)
@@ -50,6 +50,6 @@ class Schedule():
 
 if __name__ == '__main__':
     schedule = Schedule()
-    # 每天8点,发布文章 8,0
+    # 每天8，19点,发布文章
     schedule.main_day(DEDAO_PUBLISH_HOUR,DEDAO_PUBLIST_MIN)
     # schedule.main_hours(CARW_M,PUBLISH_M)
