@@ -60,8 +60,9 @@ PUBLISH_H = 8
 PUBLISH_M = 0
 
 #添加订阅号
-PUBLIST_URL = 'https://application.t.email/piper/spider/send'
-PUBLIST_TOKEN = 'd9544a52744da2c0'
+# PUBLIST_URL = 'https://application.t.email/piper/spider/send'
+PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
+PUBLISH_TOKEN = 'd9544a52744da2c0'
 PUBLISH_MAIL = 'p.20000026@msgseal.com'
 
 
@@ -88,3 +89,8 @@ DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
 
 DEDAO_PUBLISH_HOUR = 8
 DEDAO_PUBLIST_MIN = 0
+
+
+TEXT_PUBLISH_URL = '172.31.241.102:8080'
+TEST_PUBLISH_TOKEN = 'd9544a52744da2c0'
+TEST_PUBLISH_MAIL = 'p.10000001@t.email'

@@ -48,12 +48,9 @@ class Dedao_Publish():
         try:
             # 这里必需用json发送或者参考https://www.cnblogs.com/insane-Mr-Li/p/9145152.html
             r = requests.post(url=self.url, headers=self.headers, json=self.data)
-            # r = requests.post(url=self.url, headers = self.headers, data= json.dumps(self.data))
-            print(r.status_code)
 
             if r.status_code == 200:
-                pass
-                # self.mysql.update('article', 'published = 1', 'article_id = ' + str(publish_info.get('article_id')))
+                self.mysql.update('article', 'published = 1', 'article_id = ' + str(publish_info.get('article_id')))
         except Exception as e:
             self.logger.error(e)
             self.logger.error('发布文章失败，requests.post方法出现异常')

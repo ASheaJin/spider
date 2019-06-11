@@ -30,7 +30,7 @@ class Publish():
         self.logger = Logger(LOGGER_NAME).getlog()
 
         self.mysql = MySQL()
-        self.url = PUBLIST_URL
+        self.url = PUBLISH_URL
         self.url_test = 'http://httpbin.org/post'
 
         self.headers = {
@@ -40,7 +40,16 @@ class Publish():
         self.data = {
             'content': '无内容',
             'piperTemail': PUBLISH_MAIL,
-            'token': PUBLIST_TOKEN
+            'token': PUBLISH_TOKEN
+        }
+
+        self.complex_data = {
+          "imgUrl": "string",
+          "piperTemail": PUBLISH_MAIL,
+          "title": "string",
+          "token": PUBLISH_TOKEN,
+          "txt": "详情",
+          "url": "string"
         }
 
 
@@ -52,17 +61,21 @@ class Publish():
             self.logger.debug('标题为: %s 链接为: %s' % (article[1],link))
 
             link = su.Convert_SINA_Short_Url(SOURCE,link)
-            self.data['content'] = '%s \n %s' % (article[1],link)
+            # self.data['content'] = '%s \n %s' % (article[1],link)
+            self.complex_data['title'] = article[1]
+            self.complex_data['imgUrl'] = article[2]
+            self.complex_data['url'] = link
+            print(self.complex_data)
             try:
                 #这里必需用json发送或者参考https://www.cnblogs.com/insane-Mr-Li/p/9145152.html
-                r = requests.post(url=self.url, headers = self.headers, json= self.data)
+                # r = requests.post(url=self.url, headers = self.headers, json= self.data)
+                r = requests.post(url=self.url, headers = self.headers, json= self.complex_data)
                 # r = requests.post(url=self.url, headers = self.headers, data= json.dumps(self.data))
                 self.logger.debug(r.status_code)
 
                 #如果发布成功，就回数据库中设置published = 1
                 #这里必需加  \",否则查询语句就为update tb_article set published = 1 where url = https://futurism.com/russia-new-shotgun-wielding-drone-action/
                 if r.status_code == 200:
-                    # self.mysql.update(TARGET_TABLE,'published = 1','url = \"' + article[0] + '\"')
                     self.mysql.update(TARGET_TABLE, 'published = 1', 'id = ' + str(article[0]))
             except:
                 self.logger.error('发布文章失败，requests.post方法出现异常')
@@ -74,9 +87,10 @@ class Publish():
         选取文章发布时间为前一周的文章里面随机两篇
         :return:
         '''
-        columns = ['id','title']
+        columns = ['id','title','img_url']
         filter = 'DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(release_time) and published = 0 limit 2'
         results = self.mysql.select(TARGET_TABLE,columns,filter)
+        print(results)
         return results
 
     def get_text_hours(self):
