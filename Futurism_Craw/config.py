@@ -83,14 +83,15 @@ DEDAO_ARTICLT_LINK = 'https://application.t.email/pages/dedao_article/'
 
 
 # 得到app订阅号信息
-DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/send'
-DEDAO_PUBLIST_TOKEN = '223cceafd35557ba'
+# DEDAO_PUBLIST_URL = 'https://application.t.email/piper/spider/send'
+DEDAO_PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
+DEDAO_PUBLISH_TOKEN = '223cceafd35557ba'
 DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
 
 DEDAO_PUBLISH_HOUR = 8
 DEDAO_PUBLIST_MIN = 0
 
 
-TEXT_PUBLISH_URL = '172.31.241.102:8080'
+TEST_PUBLISH_URL = 'http://172.31.241.102:8080/piper/spider/sendComplexInfo'
 TEST_PUBLISH_TOKEN = 'd9544a52744da2c0'
 TEST_PUBLISH_MAIL = 'p.10000001@t.email'

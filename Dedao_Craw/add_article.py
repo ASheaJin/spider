@@ -19,5 +19,17 @@ def add_article():
 
 
 
+
+def reset_article():
+    if os.path.exists('1.txt'):
+
+        with open('1.txt', 'wb') as f:
+            f.truncate()
+        with open('1.txt','wb') as f:
+            temp = [{'next_article_id': 86068},{'next_article_id': 85947}]
+            pickle.dump(temp,f)
+
+
 if __name__ == '__main__':
-    add_article()
+    # add_article()
+    reset_article()

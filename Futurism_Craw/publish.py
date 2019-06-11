@@ -30,7 +30,8 @@ class Publish():
         self.logger = Logger(LOGGER_NAME).getlog()
 
         self.mysql = MySQL()
-        self.url = PUBLISH_URL
+        # self.url = PUBLISH_URL
+        self.url = TEST_PUBLISH_URL
         self.url_test = 'http://httpbin.org/post'
 
         self.headers = {
@@ -45,9 +46,11 @@ class Publish():
 
         self.complex_data = {
           "imgUrl": "string",
-          "piperTemail": PUBLISH_MAIL,
+          # "piperTemail": PUBLISH_MAIL,
+          "piperTemail": TEST_PUBLISH_MAIL,
           "title": "string",
-          "token": PUBLISH_TOKEN,
+          # "token": PUBLISH_TOKEN,
+          "token": TEST_PUBLISH_TOKEN,
           "txt": "详情",
           "url": "string"
         }

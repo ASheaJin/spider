@@ -23,7 +23,8 @@ class Dedao_Publish():
         self.logger = Logger(LOGGER_NAME).getlog()
 
         self.mysql = MySQL()
-        self.url = DEDAO_PUBLIST_URL
+        # self.url = DEDAO_PUBLISH_URL
+        self.url = TEST_PUBLISH_URL
         self.url_test = 'http://httpbin.org/post'
 
         self.headers = {
@@ -33,7 +34,18 @@ class Dedao_Publish():
         self.data = {
             'content': '无内容',
             'piperTemail': DEDAO_PUBLISH_MAIL,
-            'token': DEDAO_PUBLIST_TOKEN
+            'token': DEDAO_PUBLISH_TOKEN
+        }
+
+        self.complex_data = {
+          "imgUrl": "string",
+          # "piperTemail": DEDAO_PUBLISH_MAIL,
+          "piperTemail": TEST_PUBLISH_MAIL,
+          "title": "string",
+          # "token": DEDAO_PUBLISH_TOKEN,
+          "token": TEST_PUBLISH_TOKEN,
+          "txt": "详情",
+          "url": "string"
         }
 
 
@@ -41,16 +53,22 @@ class Dedao_Publish():
         link = DEDAO_ARTICLT_LINK + str(publish_info.get('article_id'))
         print(link)
         short_link = su.Convert_SINA_Short_Url(SOURCE, link)
-        if publish_info.get('chapter_name'):
-            self.data['content'] = '栏目：《%s》 \n章节：%s \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('chapter_name'),publish_info.get('article_name'),short_link)
-        else:
-            self.data['content'] = '栏目：《%s》 \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('article_name'), short_link)
+        # if publish_info.get('chapter_name'):
+        #     self.data['content'] = '栏目：《%s》 \n章节：%s \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('chapter_name'),publish_info.get('article_name'),short_link)
+        # else:
+        #     self.data['content'] = '栏目：《%s》 \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('article_name'), short_link)
+        self.complex_data['imgUrl'] = publish_info.get('cover_image')
+        self.complex_data["title"] = publish_info.get('article_name')
+        self.complex_data["url"] = short_link
+
+        print(self.complex_data)
         try:
             # 这里必需用json发送或者参考https://www.cnblogs.com/insane-Mr-Li/p/9145152.html
-            r = requests.post(url=self.url, headers=self.headers, json=self.data)
+            r = requests.post(url=self.url, headers=self.headers, json=self.complex_data)
 
             if r.status_code == 200:
                 self.mysql.update('article', 'published = 1', 'article_id = ' + str(publish_info.get('article_id')))
+
         except Exception as e:
             self.logger.error(e)
             self.logger.error('发布文章失败，requests.post方法出现异常')
@@ -71,8 +89,6 @@ class Dedao_Publish():
         # 得到当前文章的信息,文章id，文章名字
         columns_article = ['id', 'article_id', 'article_name']
         results = self.mysql.select('article', columns_article, filter)
-        # print(results)
-        # print(results[0][1])
         cur_article_id = str(results[0][1])
 
         # 得到当前文章的下一篇文章的id
@@ -96,7 +112,10 @@ class Dedao_Publish():
         # 得到当前文章的章节名
         filter = "article_id = " + cur_article_id + " and attribute_name = 'chapter_name'"
         result_chapter_name = self.mysql.select('ext_attribute', columns_ext_attribute, filter)
-        # print(result_chapter_name)
+
+        # 得到当前文章的封面
+        filter = "article_id = " + cur_article_id + " and attribute_name = 'cover_image'"
+        result_cover_image = self.mysql.select('ext_attribute', columns_ext_attribute, filter)
 
         # 得到当前文章的栏目名
         columns_column = ['column_id','column_name','column_info']
@@ -110,6 +129,7 @@ class Dedao_Publish():
         publish_info['column_name'] = result_column_name[0][1]
         publish_info['chapter_name'] = result_chapter_name[0][2] if result_chapter_name else ''
         publish_info['article_name'] = results[0][2]
+        publish_info['cover_image'] = result_cover_image[0][2] if result_cover_image else ''
 
         # print(publish_info)
         return publish_info
