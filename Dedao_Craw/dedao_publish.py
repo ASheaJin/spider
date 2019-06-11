@@ -144,4 +144,4 @@ if __name__ == '__main__':
 
     for index,item in enumerate(temp):
         print(item.get('next_article_id'))
-        pb.schedule_dedao(item.get('next_article_id'),index)
+        pb.schedule_dedao(item.get('next_article_id'), index)

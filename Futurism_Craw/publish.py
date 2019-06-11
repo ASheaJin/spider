@@ -87,7 +87,7 @@ class Publish():
 
         return results
 
-    def main_yesterday(self):
+    def main_publishLastDay(self):
         if self.mysql.get_connection():
             try:
                 results = self.get_text_yesterday()
@@ -106,7 +106,7 @@ class Publish():
 if __name__ == '__main__':
     pb = Publish()
     # pb.mysql.get_connection()
-    pb.main_yesterday()
+    pb.main_publishLastDay()
     # pb.main_hours()
 
 

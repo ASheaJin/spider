@@ -57,7 +57,7 @@ CARW_M = 10
 
 #规定发布文章时间
 PUBLISH_H = 8
-PUBLISH_M = 30
+PUBLISH_M = 0
 
 #添加订阅号
 PUBLIST_URL = 'https://application.t.email/piper/spider/send'
