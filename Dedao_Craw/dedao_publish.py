@@ -23,8 +23,8 @@ class Dedao_Publish():
         self.logger = Logger(LOGGER_NAME).getlog()
 
         self.mysql = MySQL()
-        # self.url = DEDAO_PUBLISH_URL
-        self.url = TEST_PUBLISH_URL
+        self.url = DEDAO_PUBLISH_URL
+        # self.url = TEST_PUBLISH_URL
         self.url_test = 'http://httpbin.org/post'
 
         self.headers = {
@@ -39,11 +39,11 @@ class Dedao_Publish():
 
         self.complex_data = {
             "imgUrl": "string",
-            # "piperTemail": DEDAO_PUBLISH_MAIL,
-            "piperTemail": TEST_PUBLISH_MAIL,
+            "piperTemail": DEDAO_PUBLISH_MAIL,
+            # "piperTemail": TEST_PUBLISH_MAIL,
             "title": "string",
-            # "token": DEDAO_PUBLISH_TOKEN,
-            "token": TEST_PUBLISH_TOKEN,
+            "token": DEDAO_PUBLISH_TOKEN,
+            # "token": TEST_PUBLISH_TOKEN,
             "txt": "详情",
             "url": "string",
             'imgTxt':''

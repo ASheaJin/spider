@@ -51,19 +51,19 @@ VOICE = 4
 TITLE = 5
 LINK = 6
 
-#规定爬取时间
+#未来主义爬取时间
 FUTURISM_CARW_H = 1
 FUTURISM_CARW_M = 1
 
-#规定发布文章时间
+#未来主义发布文章时间
 FUTURISM_PUBLISH_H = 8
 FUTURISM_PUBLISH_M = 0
 
-#添加订阅号
+#未来主义订阅号
 # PUBLIST_URL = 'https://application.t.email/piper/spider/send'
-PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
-PUBLISH_TOKEN = 'd9544a52744da2c0'
-PUBLISH_MAIL = 'p.20000026@msgseal.com'
+FUTURISM_PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
+FUTURISM_PUBLISH_TOKEN = 'd9544a52744da2c0'
+FUTURISM_PUBLISH_MAIL = 'p.20000026@msgseal.com'
 
 
 
