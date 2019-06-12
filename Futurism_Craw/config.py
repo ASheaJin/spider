@@ -52,12 +52,12 @@ TITLE = 5
 LINK = 6
 
 #规定爬取时间
-CARW_H = 1
-CARW_M = 10
+FUTURISM_CARW_H = 1
+FUTURISM_CARW_M = 1
 
 #规定发布文章时间
-PUBLISH_H = 8
-PUBLISH_M = 0
+FUTURISM_PUBLISH_H = 8
+FUTURISM_PUBLISH_M = 0
 
 #添加订阅号
 # PUBLIST_URL = 'https://application.t.email/piper/spider/send'

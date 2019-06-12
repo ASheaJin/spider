@@ -46,5 +46,5 @@ if __name__ == '__main__':
     schedule = Schedule()
     # 进行未来主义的一天的发布和爬取策略
     # schedule.main_day(CARW_H,CARW_M,PUBLISH_H,PUBLISH_M)
-    schedule.main_day(CARW_H,CARW_M,9,18)
+    schedule.main_day(FUTURISM_CARW_H, FUTURISM_CARW_M, FUTURISM_PUBLISH_H, FUTURISM_PUBLISH_M)
     # schedule.main_hours(CARW_M,PUBLISH_M)

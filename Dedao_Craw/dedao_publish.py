@@ -38,14 +38,15 @@ class Dedao_Publish():
         }
 
         self.complex_data = {
-          "imgUrl": "string",
-          # "piperTemail": DEDAO_PUBLISH_MAIL,
-          "piperTemail": TEST_PUBLISH_MAIL,
-          "title": "string",
-          # "token": DEDAO_PUBLISH_TOKEN,
-          "token": TEST_PUBLISH_TOKEN,
-          "txt": "详情",
-          "url": "string"
+            "imgUrl": "string",
+            # "piperTemail": DEDAO_PUBLISH_MAIL,
+            "piperTemail": TEST_PUBLISH_MAIL,
+            "title": "string",
+            # "token": DEDAO_PUBLISH_TOKEN,
+            "token": TEST_PUBLISH_TOKEN,
+            "txt": "详情",
+            "url": "string",
+            'imgTxt':''
         }
 
 
@@ -53,13 +54,11 @@ class Dedao_Publish():
         link = DEDAO_ARTICLT_LINK + str(publish_info.get('article_id'))
         print(link)
         short_link = su.Convert_SINA_Short_Url(SOURCE, link)
-        # if publish_info.get('chapter_name'):
-        #     self.data['content'] = '栏目：《%s》 \n章节：%s \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('chapter_name'),publish_info.get('article_name'),short_link)
-        # else:
-        #     self.data['content'] = '栏目：《%s》 \n文章：%s \n文章链接：%s' % (publish_info.get('column_name'), publish_info.get('article_name'), short_link)
+
         self.complex_data['imgUrl'] = publish_info.get('cover_image')
-        self.complex_data["title"] = publish_info.get('article_name')
+        self.complex_data["imgTxt"] = publish_info.get('article_name')
         self.complex_data["url"] = short_link
+        self.complex_data["title"] = publish_info.get('column_name')
 
         print(self.complex_data)
         try:
@@ -68,6 +67,21 @@ class Dedao_Publish():
 
             if r.status_code == 200:
                 self.mysql.update('article', 'published = 1', 'article_id = ' + str(publish_info.get('article_id')))
+
+                filter = "article_id = " + str(publish_info.get('article_id')) + " and attribute_name = 'next_article_id'"
+                result_next_id = self.mysql.select('ext_attribute', ['article_id','attribute_name','attribute_value'], filter)
+
+                with open('1.txt', 'rb') as f:
+                    temp = pickle.load(f)
+                with open('1.txt', 'wb') as f:
+                    f.truncate()
+
+                temp[int(publish_info.get('index'))] = {'next_article_id': result_next_id[0][2]}
+
+                # 把下一篇文章id添加到文件
+                with open('1.txt', 'wb') as f:
+                    pickle.dump(temp, f)
+
 
         except Exception as e:
             self.logger.error(e)
@@ -93,21 +107,7 @@ class Dedao_Publish():
 
         # 得到当前文章的下一篇文章的id
         columns_ext_attribute = ['article_id','attribute_name','attribute_value']
-        filter = "article_id = " + cur_article_id + " and attribute_name = 'next_article_id'"
-        result_next_id = self.mysql.select('ext_attribute', columns_ext_attribute, filter)
 
-        with open('1.txt', 'rb') as f:
-            temp = pickle.load(f)
-        with open('1.txt', 'wb') as f:
-            f.truncate()
-
-        # print(temp)
-        temp[index] = {'next_article_id':result_next_id[0][2]}
-        # print(temp)
-
-        #把下一篇文章id添加到文件
-        with open('1.txt', 'wb') as f:
-            pickle.dump(temp,f)
 
         # 得到当前文章的章节名
         filter = "article_id = " + cur_article_id + " and attribute_name = 'chapter_name'"
@@ -130,6 +130,7 @@ class Dedao_Publish():
         publish_info['chapter_name'] = result_chapter_name[0][2] if result_chapter_name else ''
         publish_info['article_name'] = results[0][2]
         publish_info['cover_image'] = result_cover_image[0][2] if result_cover_image else ''
+        publish_info['index'] = index
 
         # print(publish_info)
         return publish_info

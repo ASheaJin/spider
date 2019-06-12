@@ -45,14 +45,16 @@ class Publish():
         }
 
         self.complex_data = {
-          "imgUrl": "string",
-          # "piperTemail": PUBLISH_MAIL,
-          "piperTemail": TEST_PUBLISH_MAIL,
-          "title": "string",
-          # "token": PUBLISH_TOKEN,
-          "token": TEST_PUBLISH_TOKEN,
-          "txt": "详情",
-          "url": "string"
+            "imgUrl": "string",
+            # "piperTemail": PUBLISH_MAIL,
+            "piperTemail": TEST_PUBLISH_MAIL,
+            "title": "string",
+             # "token": PUBLISH_TOKEN,
+            "token": TEST_PUBLISH_TOKEN,
+            "txt": "详情",
+            "url": "string",
+            "imgTxt":''
+
         }
 
 
@@ -68,6 +70,7 @@ class Publish():
             self.complex_data['title'] = article[1]
             self.complex_data['imgUrl'] = article[2]
             self.complex_data['url'] = link
+            self.complex_data['imgTxt'] = article[3].strftime('%Y-%m-%d')
             print(self.complex_data)
             try:
                 #这里必需用json发送或者参考https://www.cnblogs.com/insane-Mr-Li/p/9145152.html
@@ -90,8 +93,9 @@ class Publish():
         选取文章发布时间为前一周的文章里面随机两篇
         :return:
         '''
-        columns = ['id','title','img_url']
-        filter = 'DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(release_time) and published = 0 limit 2'
+        columns = ['id','title','img_url','release_time']
+        # filter = 'DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(release_time) and published = 0 limit 2'
+        filter = 'DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE(release_time) and published = 0 ORDER BY release_time DESC limit 2'
         results = self.mysql.select(TARGET_TABLE,columns,filter)
         print(results)
         return results
