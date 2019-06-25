@@ -137,7 +137,7 @@ class Futurism_Spider():
         '''
 
         for item in records:
-
+            pure_text = item.pop().get('text')
             json_data = json.dumps(item)
             data = {
                 'url': item[1].get('text'),
@@ -147,9 +147,9 @@ class Futurism_Spider():
                 # 'content': item[4].get('text'),
                 'author': item[4].get('text'),
                 'data': json_data,
-                'release_time': item[len(item) - 3].get('text'),
-                'craw_time': item[len(item) - 2].get('text'),
-                'pure_text': item[len(item) - 1].get('text')
+                'release_time': item[6].get('text'),
+                'craw_time': item[7].get('text'),
+                'pure_text': pure_text
             }
             self.mysql.insert(TARGET_TABLE,data)
 
