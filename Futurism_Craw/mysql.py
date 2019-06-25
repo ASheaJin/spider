@@ -27,13 +27,12 @@ class MySQL():
         try:
             self.db = pymysql.connect(self.host, self.username, self.password, self.database, charset='utf8', port=self.port)
             self.cursor = self.db.cursor()
-            self.logger.debug('获取数据库链接成功')
+            self.logger.info('获取数据库链接成功')
             return True
         # except pymysql.MySQLError as e:
         #     self.logger.debug(e.args)
         except Exception as e:
-            self.logger.error(e)
-            self.logger.error('获取数据库链接失败')
+            self.logger.error('获取数据库链接失败', exc_info=True)
             return False
 
 
@@ -42,11 +41,10 @@ class MySQL():
         try:
             if self.db:
                 self.db.close()
-                self.logger.debug('关闭数据库链接成功')
+                self.logger.info('关闭数据库链接成功')
                 return True
         except Exception as e:
-            self.logger.error(e)
-            self.logger.debug('关闭数据库链接失败')
+            self.logger.error('关闭数据库链接失败', exc_info=True)
             return False
 
 
@@ -70,14 +68,13 @@ class MySQL():
             if self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"') == ((0,),):
                 if self.cursor.execute(sql_query, tuple(data.values())):
                     # self.logger.debug(self.select(table,'count(url)', 'url = \"' + data.get('url') + '\"'))
-                    self.logger.debug('数据插入成功')
+                    self.logger.info('数据插入成功')
                     self.db.commit()
             else:
-                self.logger.debug('数据库中该数据已经存在，插入失败')
+                self.logger.info('数据库中该数据已经存在，插入失败')
 
         except Exception as e:
-            self.logger.error(e)
-            self.logger.error('插入方法出现异常，数据插入失败')
+            self.logger.error('插入方法出现异常，数据插入失败', exc_info=True)
             self.db.rollback()
 
 
@@ -90,28 +87,25 @@ class MySQL():
             columns = ', '.join(columns)
 
         sql_query = 'select %s from %s where %s' % (columns, table, filter)
-        self.logger.debug('查询语句为: %s' % sql_query)
+        self.logger.info('查询语句为: %s' % sql_query)
         try:
             self.cursor.execute(sql_query)
-            self.logger.debug('查询出的数量：',self.cursor.rowcount)
+            self.logger.info('查询出的数量：',self.cursor.rowcount)
             results = self.cursor.fetchall()
-            # self.logger.debug(results)
             return results
         except Exception as e:
-            self.logger.error(e)
-            self.logger.error('查询方法出现异常')
+            self.logger.error('查询方法出现异常',exc_info=True)
 
 
     def update(self,table,setter,filter):
         sql_query = 'update %s set %s where %s' % (table,setter,filter)
-        self.logger.debug(sql_query)
+        self.logger.info(sql_query)
         try:
             self.cursor.execute(sql_query)
-            self.logger.debug('更新成功')
+            self.logger.info('更新成功')
             self.db.commit()
         except Exception as e:
-            self.logger.error(e)
-            self.logger.error('更新方法出现异常')
+            self.logger.error('更新方法出现异常', exc_info=True)
             self.db.rollback()
 
 
@@ -120,4 +114,4 @@ if __name__ == '__main__':
     mysql.get_connection()
     # mysql.update(TARGET_TABLE,'published = 1','url = ' + '\"https://futurism.com/russia-new-shotgun-wielding-drone-action/\"')
     if mysql.close_connection():
-        self.logger.debug('haha')
+        self.logger.info('haha')

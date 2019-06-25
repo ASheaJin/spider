@@ -84,8 +84,7 @@ class Dedao_Publish():
 
 
         except Exception as e:
-            self.logger.error(e)
-            self.logger.error('发布文章失败，requests.post方法出现异常')
+            self.logger.error('发布文章失败，requests.post方法出现异常',exc_info=True)
         # 文章之间发布间隔
         time.sleep(3)
 

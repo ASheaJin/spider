@@ -63,7 +63,7 @@ class Publish():
             # pure_text = article[2]
             id = article[0] * 12
             link = ARTICLT_LINK + str(id)
-            self.logger.debug('标题为: %s 链接为: %s' % (article[1],link))
+            self.logger.info('标题为: %s 链接为: %s' % (article[1],link))
 
             link = su.Convert_SINA_Short_Url(SOURCE,link)
             # self.data['content'] = '%s \n %s' % (article[1],link)
@@ -77,14 +77,14 @@ class Publish():
                 # r = requests.post(url=self.url, headers = self.headers, json= self.data)
                 r = requests.post(url=self.url, headers = self.headers, json= self.complex_data)
                 # r = requests.post(url=self.url, headers = self.headers, data= json.dumps(self.data))
-                self.logger.debug(r.status_code)
+                self.logger.info(r.status_code)
 
                 #如果发布成功，就回数据库中设置published = 1
                 #这里必需加  \",否则查询语句就为update tb_article set published = 1 where url = https://futurism.com/russia-new-shotgun-wielding-drone-action/
                 if r.status_code == 200:
                     self.mysql.update(TARGET_TABLE, 'published = 1', 'id = ' + str(article[0]))
             except:
-                self.logger.error('发布文章失败，requests.post方法出现异常')
+                self.logger.error('发布文章失败，requests.post方法出现异常', exc_info=True)
             # 设置文章之间发布间隔
             time.sleep(3)
 

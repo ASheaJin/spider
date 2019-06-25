@@ -92,6 +92,6 @@ DEDAO_PUBLISH_HOUR = 20
 DEDAO_PUBLIST_MIN = 0
 
 
-TEST_PUBLISH_URL = 'http://172.31.241.102:8080/piper/spider/sendComplexInfo'
+TEST_PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
 TEST_PUBLISH_TOKEN = 'd9544a52744da2c0'
-TEST_PUBLISH_MAIL = 'p.10000001@t.email'
+TEST_PUBLISH_MAIL = 'p.20000003@msgseal.com'
