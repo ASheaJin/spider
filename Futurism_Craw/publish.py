@@ -83,6 +83,7 @@ class Publish():
                 #这里必需加  \",否则查询语句就为update tb_article set published = 1 where url = https://futurism.com/russia-new-shotgun-wielding-drone-action/
                 if r.status_code == 200:
                     self.mysql.update(TARGET_TABLE, 'published = 1', 'id = ' + str(article[0]))
+                self.logger.info('文章发布成功, article_name = %s' % article[1])
             except:
                 self.logger.error('发布文章失败，requests.post方法出现异常', exc_info=True)
             # 设置文章之间发布间隔

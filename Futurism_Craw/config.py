@@ -56,7 +56,7 @@ FUTURISM_CARW_H = 1
 FUTURISM_CARW_M = 1
 
 #未来主义发布文章时间
-FUTURISM_PUBLISH_H = 20
+FUTURISM_PUBLISH_H = 8
 FUTURISM_PUBLISH_M = 0
 
 #未来主义订阅号
@@ -88,7 +88,7 @@ DEDAO_PUBLISH_URL = 'https://application.t.email/piper/spider/sendComplexInfo'
 DEDAO_PUBLISH_TOKEN = '223cceafd35557ba'
 DEDAO_PUBLISH_MAIL = 'p.20000001@msgseal.com'
 
-DEDAO_PUBLISH_HOUR = 20
+DEDAO_PUBLISH_HOUR = 8
 DEDAO_PUBLIST_MIN = 0
 
 

@@ -81,7 +81,7 @@ class Dedao_Publish():
                 # 把下一篇文章id添加到文件
                 with open('1.txt', 'wb') as f:
                     pickle.dump(temp, f)
-
+                self.logger.info('文章发布成功, article_id = %s, article_name = %s' % (str(publish_info.get('article_id')), publish_info.get('article_name')))
 
         except Exception as e:
             self.logger.error('发布文章失败，requests.post方法出现异常',exc_info=True)
@@ -96,9 +96,9 @@ class Dedao_Publish():
         # 如果为新栏目，需要返回当前信息，还需要返回下一篇文章的article_id
         # 如果为老栏目，需要返回当前信息，还需要返回下一篇文章的article_id
         if int(id):
-            filter = "published = 0 and article_id = " + str(id)
+            filter = "uploaded = 1 and published = 0 and article_id = " + str(id)
         else:
-            filter = "published = 0 and article_id in (select article_id from ext_attribute where attribute_name = 'prev_article_id' and attribute_value = '0') limit 1"
+            filter = "uploaded = 1 and published = 0 and article_id in (select article_id from ext_attribute where attribute_name = 'prev_article_id' and attribute_value = '0') limit 1"
         # 得到当前文章的信息,文章id，文章名字
         columns_article = ['id', 'article_id', 'article_name']
         results = self.mysql.select('article', columns_article, filter)
