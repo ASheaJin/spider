@@ -188,7 +188,6 @@ class Futurism_Spider():
         else:
             self.logger.warning('当前时间的爬虫未能爬取到数据')
 
-
     def run(self,offset):
         self.start(offset)
 

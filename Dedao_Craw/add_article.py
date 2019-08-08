@@ -26,7 +26,7 @@ def reset_article():
         with open('1.txt', 'wb') as f:
             f.truncate()
         with open('1.txt','wb') as f:
-            temp = [{'next_article_id': 68504},{'next_article_id': 85519}]
+            temp = [{'next_article_id': 83525},{'next_article_id': 0}]
             pickle.dump(temp,f)
 
 
